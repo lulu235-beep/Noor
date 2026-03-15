@@ -1,0 +1,823 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Noor">
+<meta name="theme-color" content="#5ba4cf">
+<meta name="description" content="Noor Life Tracker - Habit & Ibadah Tracker">
+<title>Noor ✨ Life Tracker</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Fredoka+One&display=swap" rel="stylesheet" onerror="this.remove()">
+<style>
+/* If Google Fonts unavailable (offline), use system fonts */
+body { font-family: 'Nunito', 'Segoe UI', Tahoma, sans-serif !important; }
+.logo-tx, .pht span, .hg, .hbig, .hsmv, .lvn, .strn, .smv, .tct, .cyn,
+h1, h2, [style*="Fredoka"] { font-family: 'Fredoka One', 'Arial Rounded MT Bold', 'Trebuchet MS', cursive !important; }
+</style>
+<style>
+:root{
+  --blue:#5ba4cf;--blue-l:#a8d4f0;--blue-p:#e8f4ff;--blue-d:#3a7ab0;
+  --lilac:#b89de0;--lilac-l:#ddd0f5;--lilac-p:#f2eeff;
+  --pink:#e890c0;--pink-l:#f5c8e5;--pink-p:#fef0f8;
+  --white:#ffffff;--bg:#f0f6ff;
+  --tx:#1e3a5a;--txm:#6a8aaa;--txl:#b0cce0;
+  --gr:#4db887;--rd:#e05575;--yl:#f0b840;--br:#9a5520;
+  --sh:0 4px 18px rgba(60,120,190,.12);--shm:0 8px 30px rgba(60,120,190,.2);
+  --r:20px;--rs:14px;--rx:9px;
+  --tr:all .25s cubic-bezier(.4,0,.2,1);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;overflow-x:hidden;}
+::-webkit-scrollbar{width:5px;}::-webkit-scrollbar-track{background:var(--bg);}::-webkit-scrollbar-thumb{background:var(--blue-l);border-radius:3px;}
+/* LAYOUT */
+.app{display:flex;flex-direction:column;min-height:100vh;}
+/* TOP HEADER */
+.topbar{position:fixed;top:0;left:0;right:0;z-index:200;background:white;border-bottom:2px solid var(--blue-p);padding:10px 16px;display:flex;align-items:center;justify-content:space-between;}
+.topbar-logo{display:flex;align-items:center;gap:8px;}
+.topbar-ic{width:32px;height:32px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--lilac));display:flex;align-items:center;justify-content:center;}
+.topbar-tx{font-family:'Fredoka One',cursive;font-size:19px;color:var(--blue-d);}
+.topbar-user{display:flex;align-items:center;gap:7px;cursor:pointer;background:var(--blue-p);padding:5px 10px;border-radius:100px;}
+.uav{font-size:16px;}
+.uname-top{font-size:12px;font-weight:800;color:var(--blue-d);}
+/* BOTTOM TAB BAR */
+.bottomnav{position:fixed;bottom:0;left:0;right:0;z-index:200;background:white;border-top:2px solid var(--blue-p);display:flex;align-items:center;padding:0;box-shadow:0 -4px 20px rgba(91,164,207,.12);}
+.bnav-scroll{display:flex;overflow-x:auto;width:100%;-webkit-overflow-scrolling:touch;scrollbar-width:none;gap:0;}
+.bnav-scroll::-webkit-scrollbar{display:none;}
+.ni{display:flex;flex-direction:column;align-items:center;gap:2px;padding:8px 14px;cursor:pointer;flex-shrink:0;min-width:70px;border-top:3px solid transparent;transition:var(--tr);color:var(--txm);}
+.ni:hover{background:var(--blue-p);}
+.ni.active{border-top-color:var(--blue);color:var(--blue-d);background:var(--blue-p);}
+.ni .nav-icon{font-size:20px;}
+.ni .nav-label{font-size:10px;font-weight:800;white-space:nowrap;}
+/* MAIN CONTENT */
+.main{flex:1;padding:16px;padding-top:72px;padding-bottom:80px;max-width:100%;}
+/* hide old sidebar stuff */
+.sb{display:none;}
+.sbf{display:none;}
+.hamburger,.hbg,.sbov{display:none!important;}
+.page{display:none;animation:fu .3s ease;}
+.page.active{display:block;}
+@keyframes fu{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.ph{margin-bottom:18px;}
+.pht{font-family:'Fredoka One',cursive;font-size:25px;color:var(--tx);}
+.pht span{color:var(--blue-d);}
+.phs{font-size:12px;color:var(--txm);font-weight:600;margin-top:2px;}
+.card{background:var(--white);border-radius:var(--r);padding:17px;box-shadow:var(--sh);transition:var(--tr);}
+.card:hover{box-shadow:var(--shm);}
+.cl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--txm);margin-bottom:8px;}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:11px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
+.mb11{margin-bottom:11px;}.mb18{margin-bottom:18px;}
+.pw{background:var(--blue-p);border-radius:100px;height:8px;overflow:hidden;}
+.pf{height:100%;border-radius:100px;transition:width .8s cubic-bezier(.4,0,.2,1);}
+.pbl{background:linear-gradient(90deg,var(--blue-l),var(--blue));}
+.plc{background:linear-gradient(90deg,var(--lilac-l),var(--lilac));}
+.ppk{background:linear-gradient(90deg,var(--pink-l),var(--pink));}
+.pgr{background:linear-gradient(90deg,#a0e0c0,var(--gr));}
+.pyl{background:linear-gradient(90deg,#f8dea0,var(--yl));}
+/* TOAST */
+.toast{position:fixed;top:18px;right:18px;z-index:9999;background:linear-gradient(135deg,var(--blue),var(--lilac));color:white;padding:10px 16px;border-radius:var(--rs);font-weight:800;font-size:13px;box-shadow:0 8px 28px rgba(91,164,207,.4);display:none;align-items:center;gap:7px;}
+.toast.show{display:flex;animation:ti .35s ease;}
+@keyframes ti{from{opacity:0;transform:translateY(-14px)scale(.9)}to{opacity:1;transform:translateY(0)scale(1)}}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border-radius:100px;font-family:'Nunito',sans-serif;font-size:12px;font-weight:800;cursor:pointer;border:none;transition:var(--tr);}
+.bp{background:linear-gradient(135deg,var(--blue),var(--lilac));color:white;box-shadow:0 4px 12px rgba(91,164,207,.3);}
+.bp:hover{transform:translateY(-1px);box-shadow:0 7px 20px rgba(91,164,207,.45);}
+.bo{background:transparent;border:2px solid var(--blue-l);color:var(--blue-d);}
+.bo:hover{background:var(--blue-p);}
+.bg2{background:var(--blue-p);color:var(--blue-d);}
+.bsm{padding:6px 12px;font-size:11px;}
+/* MODAL */
+.ov{position:fixed;inset:0;background:rgba(30,58,90,.38);backdrop-filter:blur(5px);z-index:500;display:none;align-items:center;justify-content:center;padding:16px;}
+.ov.show{display:flex;}
+.modal{background:white;border-radius:var(--r);padding:22px;max-width:410px;width:100%;box-shadow:0 24px 80px rgba(30,58,90,.2);animation:mi .28s ease;max-height:90vh;overflow-y:auto;}
+@keyframes mi{from{opacity:0;transform:scale(.93)translateY(16px)}to{opacity:1;transform:scale(1)translateY(0)}}
+.mt{font-family:'Fredoka One',cursive;font-size:18px;color:var(--tx);margin-bottom:14px;}
+.fg{margin-bottom:11px;}
+.fl{font-size:10px;font-weight:800;color:var(--txm);text-transform:uppercase;letter-spacing:.6px;display:block;margin-bottom:4px;}
+.fi{width:100%;padding:9px 12px;border-radius:var(--rx);border:2px solid var(--blue-l);background:var(--bg);font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;color:var(--tx);outline:none;transition:var(--tr);}
+.fi:focus{border-color:var(--blue);background:white;}
+select.fi{cursor:pointer;}
+.mf{display:flex;gap:8px;justify-content:flex-end;margin-top:14px;}
+/* EMOJI PICKER */
+.er{display:flex;flex-wrap:wrap;gap:5px;max-height:150px;overflow-y:auto;}
+.ep{font-size:19px;padding:4px 7px;border-radius:var(--rx);cursor:pointer;border:2px solid transparent;background:var(--blue-p);transition:var(--tr);}
+.ep:hover,.ep.sel{background:var(--pink-l);border-color:var(--pink);transform:scale(1.1);}
+/* HERO GRID */
+.hgrid{display:grid;grid-template-columns:1fr 1fr;gap:11px;margin-bottom:11px;align-items:start;}
+.hmain{background:linear-gradient(135deg,#5ba4cf,#8878d0);border-radius:var(--r);padding:17px;color:white;position:relative;overflow:hidden;}
+.hmain::after{content:'';position:absolute;right:-15px;bottom:-15px;width:90px;height:90px;border-radius:50%;background:rgba(255,255,255,.12);}
+.hg{font-family:'Fredoka One',cursive;font-size:19px;margin-bottom:2px;}
+.hd{font-size:11px;opacity:.85;font-weight:600;margin-bottom:12px;}
+.hbig{font-family:'Fredoka One',cursive;font-size:34px;line-height:1;}
+.hsub{font-size:11px;opacity:.85;font-weight:700;margin-bottom:4px;}
+.hnxt{margin-top:9px;background:rgba(255,255,255,.25);border-radius:9px;padding:7px 9px;}
+.hnl{font-size:10px;font-weight:800;opacity:.78;text-transform:uppercase;}
+.hnv{font-size:13px;font-weight:800;}
+.hsm{background:white;border-radius:var(--r);padding:13px;box-shadow:var(--sh);display:flex;align-items:center;gap:9px;}
+.hsmv{font-family:'Fredoka One',cursive;font-size:21px;color:var(--tx);}
+.hsml{font-size:10px;color:var(--txm);font-weight:700;}
+/* LEVEL & STREAK */
+.lvc{background:linear-gradient(135deg,var(--pink),var(--lilac));border-radius:var(--r);padding:17px;color:white;}
+.lvn{font-family:'Fredoka One',cursive;font-size:38px;line-height:1;}
+.lvna{font-size:12px;font-weight:700;opacity:.9;margin-bottom:9px;}
+.lvbb{background:rgba(255,255,255,.25);border-radius:100px;height:8px;overflow:hidden;}
+.lvbf{height:100%;border-radius:100px;background:white;transition:width .8s ease;}
+.lvx{font-size:10px;opacity:.8;font-weight:700;margin-top:4px;}
+.strc{background:linear-gradient(135deg,#ff9a5c,#e05575);border-radius:var(--r);padding:17px;color:white;display:flex;align-items:center;gap:10px;}
+.strn{font-family:'Fredoka One',cursive;font-size:36px;}
+/* PERFECT DAY */
+.pd{background:linear-gradient(135deg,#f0d060,#f0a060);border-radius:var(--r);padding:14px;color:white;text-align:center;display:none;margin-bottom:11px;}
+.pd.show{display:block;animation:bi .5s ease;}
+@keyframes bi{0%{transform:scale(.7);opacity:0}60%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+/* GOALS */
+.gi{display:flex;align-items:center;gap:9px;padding:9px 0;border-bottom:1px solid var(--blue-p);}
+.gck{width:21px;height:21px;border-radius:50%;border:2.5px solid var(--blue-l);cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:var(--tr);font-size:11px;color:white;}
+.gck.done{background:var(--gr);border-color:var(--gr);}
+.gtx{flex:1;font-size:13px;font-weight:700;color:var(--tx);}
+.gtx.done{text-decoration:line-through;color:var(--txm);}
+/* ACTIVITY */
+.ac{background:white;border-radius:var(--r);padding:13px 14px;box-shadow:var(--sh);display:flex;align-items:center;gap:10px;cursor:pointer;transition:var(--tr);border:2px solid transparent;}
+.ac:hover{transform:translateY(-2px);box-shadow:var(--shm);}
+.ac.done{background:linear-gradient(135deg,#edf8f4,#eaf0ff);border-color:var(--gr);}
+.aem{font-size:23px;flex-shrink:0;}
+.an{font-size:13px;font-weight:800;color:var(--tx);}
+.am{font-size:10px;color:var(--txm);font-weight:700;}
+.ack{width:23px;height:23px;border-radius:50%;border:2.5px solid var(--blue-l);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:var(--tr);font-size:11px;color:white;}
+.ac.done .ack{background:var(--gr);border-color:var(--gr);}
+.adl{background:none;border:none;cursor:pointer;font-size:12px;color:var(--txl);padding:3px;transition:var(--tr);}
+.adl:hover{color:var(--rd);}
+/* PRAYER */
+.pgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;}
+.pc{background:white;border-radius:var(--r);padding:11px 7px;box-shadow:var(--sh);text-align:center;cursor:pointer;transition:var(--tr);border:2.5px solid var(--blue-l);}
+.pc:hover{transform:translateY(-2px);box-shadow:var(--shm);}
+.pc.awal{background:linear-gradient(135deg,#edfaf4,#f0fff8);border-color:var(--gr);}
+.pc.akhir{background:linear-gradient(135deg,#fdeef2,#fff8f8);border-color:var(--rd);}
+.pe2{font-size:26px;margin-bottom:4px;}
+.pn{font-size:11px;font-weight:800;color:var(--tx);}
+.pt{font-size:10px;color:var(--txm);font-weight:600;}
+.pb2{font-size:9px;font-weight:800;margin-top:4px;padding:2px 7px;border-radius:100px;display:inline-block;}
+.pc.awal .pb2{background:var(--gr);color:white;}
+.pc.akhir .pb2{background:var(--rd);color:white;}
+.pc:not(.awal):not(.akhir) .pb2{background:var(--blue-p);color:var(--txm);}
+/* CALENDAR */
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;}
+.ch{font-size:10px;font-weight:800;color:var(--txm);text-align:center;padding:2px 0;}
+.cd{aspect-ratio:1;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;cursor:pointer;transition:var(--tr);background:var(--blue-p);color:var(--txm);position:relative;}
+.cd:hover{transform:scale(1.15);}
+.cd.today{background:var(--blue);color:white;box-shadow:0 2px 8px rgba(91,164,207,.4);}
+.cd.hev{background:var(--gr);color:white;}
+.cd.p-red{background:var(--rd);color:white;}
+.cd.p-pink{background:var(--pink);color:white;}
+.cd.p-brown{background:var(--br);color:white;}
+.cd.pred{background:var(--pink-l);border:2px dashed var(--pink);color:var(--tx);}
+.cd.empty{background:transparent;pointer-events:none;}
+.dndot{position:absolute;bottom:1px;right:1px;width:5px;height:5px;border-radius:50%;background:white;opacity:.85;}
+/* DAY NOTE POPUP */
+.dnp{position:fixed;z-index:600;background:white;border-radius:var(--rs);padding:14px;box-shadow:0 16px 48px rgba(30,58,90,.2);min-width:230px;max-width:270px;animation:mi .22s ease;}
+.cpr{display:flex;gap:7px;margin:7px 0;}
+.cpb{width:30px;height:30px;border-radius:50%;cursor:pointer;border:3px solid transparent;transition:var(--tr);flex-shrink:0;}
+.cpb:hover,.cpb.sel{border-color:var(--tx);transform:scale(1.15);}
+.nta{width:100%;min-height:65px;padding:7px 9px;border-radius:var(--rx);border:2px solid var(--blue-l);font-family:'Nunito',sans-serif;font-size:11px;font-weight:600;color:var(--tx);outline:none;resize:none;background:var(--bg);}
+.nta:focus{border-color:var(--blue);}
+/* WATER */
+.wn{font-family:'Fredoka One',cursive;font-size:56px;color:var(--blue);text-align:center;}
+.wdrops{display:flex;flex-wrap:wrap;gap:5px;justify-content:center;margin:10px 0;}
+.wd{font-size:26px;cursor:pointer;transition:var(--tr);filter:grayscale(1) opacity(.28);}
+.wd.f{filter:none;animation:di .3s ease;}
+@keyframes di{from{transform:scale(.7)}to{transform:scale(1)}}
+.wti{width:56px;padding:5px 7px;border-radius:var(--rx);border:2px solid var(--blue-l);font-family:'Fredoka One',cursive;font-size:15px;color:var(--blue-d);text-align:center;outline:none;background:var(--blue-p);}
+/* DHIKR */
+.dk{background:white;border-radius:var(--r);padding:13px 14px;box-shadow:var(--sh);display:flex;align-items:center;gap:10px;cursor:pointer;transition:var(--tr);border:2px solid transparent;}
+.dk:hover{transform:translateY(-2px);}
+.dk.done{background:linear-gradient(135deg,#edfaf4,#eaf0ff);border-color:var(--gr);}
+.dar{font-size:11px;color:var(--txm);font-weight:600;direction:rtl;text-align:right;font-family:serif;margin-top:2px;}
+/* TABS */
+.tabs{display:flex;gap:6px;margin-bottom:13px;flex-wrap:wrap;}
+.tab{padding:7px 14px;border-radius:100px;font-size:11px;font-weight:800;cursor:pointer;transition:var(--tr);background:white;color:var(--txm);border:2px solid var(--blue-l);}
+.tab.active{background:linear-gradient(135deg,var(--blue),var(--lilac));color:white;border-color:transparent;box-shadow:0 3px 10px rgba(91,164,207,.3);}
+/* CHART */
+.cb{display:flex;align-items:flex-end;gap:5px;height:95px;}
+.cbar{flex:1;border-radius:4px 4px 0 0;min-width:0;transition:height .8s ease;}
+.cls{display:flex;gap:5px;margin-top:3px;}
+.clab{flex:1;text-align:center;font-size:9px;font-weight:700;color:var(--txm);}
+/* TRACKER CARDS */
+.tc{background:white;border-radius:var(--r);padding:15px;box-shadow:var(--sh);margin-bottom:11px;}
+.tct{font-family:'Fredoka One',cursive;font-size:16px;color:var(--tx);}
+.tdg{display:flex;flex-wrap:wrap;gap:4px;margin-top:9px;}
+.td{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:9px;font-weight:700;}
+.tdd{background:var(--gr);color:white;}
+.tdm{background:var(--blue-p);color:var(--txm);}
+.tdt{background:var(--blue);color:white;box-shadow:0 2px 8px rgba(91,164,207,.4);}
+/* MOOD */
+.mr{display:flex;gap:6px;flex-wrap:wrap;}
+.mb{font-size:22px;padding:5px 9px;border-radius:var(--rx);cursor:pointer;border:2.5px solid transparent;background:var(--blue-p);transition:var(--tr);}
+.mb:hover,.mb.sel{background:var(--pink-l);border-color:var(--pink);transform:scale(1.15);}
+/* STAT MINI */
+.smc{background:white;border-radius:var(--r);padding:13px;box-shadow:var(--sh);}
+.smi{font-size:24px;margin-bottom:5px;}
+.smv{font-family:'Fredoka One',cursive;font-size:22px;color:var(--tx);}
+.sml{font-size:10px;font-weight:800;color:var(--txm);text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px;}
+/* TROPHY */
+.tgrid{display:flex;gap:9px;flex-wrap:wrap;}
+.titem{background:white;border-radius:var(--rs);padding:10px 8px;box-shadow:var(--sh);text-align:center;min-width:72px;flex:1;}
+.tico{font-size:24px;margin-bottom:2px;}
+.tnm{font-size:9px;font-weight:800;color:var(--txm);}
+.titem.locked{filter:grayscale(1) opacity(.4);}
+/* JOURNAL */
+.jta{width:100%;min-height:95px;padding:10px;border-radius:var(--rs);border:2px solid var(--blue-l);background:var(--bg);font-family:'Nunito',sans-serif;font-size:12px;font-weight:600;color:var(--tx);outline:none;resize:vertical;transition:var(--tr);line-height:1.6;}
+.jta:focus{border-color:var(--blue);background:white;}
+/* CYCLE */
+.cyh{background:linear-gradient(135deg,var(--pink-p),var(--lilac-p));border-radius:var(--r);padding:17px;margin-bottom:11px;}
+.cyn{font-family:'Fredoka One',cursive;font-size:46px;color:var(--pink);}
+.cleg{display:flex;gap:9px;flex-wrap:wrap;margin-top:9px;}
+.clei{display:flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--txm);}
+.cld{width:10px;height:10px;border-radius:3px;}
+/* MASCOT */
+.msc{display:inline-block;animation:wb 3s ease-in-out infinite;}
+@keyframes wb{0%,100%{transform:rotate(-3deg)}50%{transform:rotate(3deg)}}
+/* STITLE */
+.stl{font-family:'Fredoka One',cursive;font-size:15px;color:var(--tx);margin-bottom:9px;}
+/* HAMBURGER */
+.hbg{display:none;position:fixed;top:12px;left:12px;z-index:200;background:white;border:2px solid var(--blue-l);border-radius:var(--rx);padding:7px 9px;cursor:pointer;box-shadow:var(--sh);font-size:16px;}
+.sbov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.3);z-index:99;}
+@media(max-width:600px){
+  .g4{grid-template-columns:1fr 1fr;}
+  .pgrid{grid-template-columns:repeat(3,1fr);}
+  .hgrid{grid-template-columns:1fr 1fr;}
+  .g2{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:400px){
+  .g4{grid-template-columns:1fr 1fr;}
+  .pgrid{grid-template-columns:1fr 1fr;}
+  .g2{grid-template-columns:1fr;}
+  .hgrid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+<div class="toast" id="toast">✨ <span id="tmsg"></span></div>
+
+<!-- DAY NOTE POPUP -->
+<div id="dnpop" class="dnp" style="display:none">
+  <div style="font-family:'Fredoka One',cursive;font-size:14px;color:var(--tx);margin-bottom:7px" id="dntitle">Tanggal ~</div>
+  <div class="fl">Warna Darah</div>
+  <div class="cpr">
+    <div class="cpb" style="background:var(--rd)" title="Merah - Deras" onclick="pcc('red',this)"></div>
+    <div class="cpb" style="background:var(--pink)" title="Pink - Ringan" onclick="pcc('pink',this)"></div>
+    <div class="cpb" style="background:var(--br)" title="Coklat - Flek" onclick="pcc('brown',this)"></div>
+    <div class="cpb" style="background:var(--blue-p);border-color:var(--blue-l);color:var(--txm);font-size:12px;display:flex;align-items:center;justify-content:center" onclick="pcc('none',this)">✕</div>
+  </div>
+  <div class="fl">Catatan Hari Ini</div>
+  <textarea class="nta" id="dnnote" placeholder="Catat perasaan, gejala, dll..."></textarea>
+  <div style="display:flex;gap:7px;justify-content:flex-end;margin-top:9px">
+    <button class="btn bo bsm" onclick="cdnp()">Batal</button>
+    <button class="btn bp bsm" onclick="svdn()">💾 Simpan</button>
+  </div>
+</div>
+
+<div class="app">
+<!-- SIDEBAR -->
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-logo">
+    <div class="topbar-ic">
+      <svg width="18" height="18" viewBox="0 0 22 22"><path d="M14 4a8 8 0 1 0 0 14 6 6 0 0 1 0-14z" fill="white"/><circle cx="8" cy="9" r="1.4" fill="#5ba4cf"/><circle cx="13" cy="9" r="1.4" fill="#5ba4cf"/><path d="M7 13 q4 4 8 0" stroke="#5ba4cf" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <div class="topbar-tx">Noor</div>
+  </div>
+  <div class="topbar-user" onclick="onm()">
+    <div class="uav" id="sbav">🌟</div>
+    <div class="uname-top" id="sbnm">Nama Kamu</div>
+    <div style="font-size:11px;opacity:.6">✏️</div>
+  </div>
+</div>
+
+<!-- BOTTOM NAV TAB BAR -->
+<div class="bottomnav">
+  <div class="bnav-scroll">
+    <a class="ni active" data-p="dashboard" onclick="nav('dashboard')"><span class="nav-icon">🏠</span><span class="nav-label">Home</span></a>
+    <a class="ni" data-p="activities" onclick="nav('activities')"><span class="nav-icon">✅</span><span class="nav-label">Aktivitas</span></a>
+    <a class="ni" data-p="sholat" onclick="nav('sholat')"><span class="nav-icon">🕌</span><span class="nav-label">Sholat</span></a>
+    <a class="ni" data-p="charity" onclick="nav('charity')"><span class="nav-icon">💝</span><span class="nav-label">Charity</span></a>
+    <a class="ni" data-p="journal" onclick="nav('journal')"><span class="nav-icon">📔</span><span class="nav-label">Jurnal</span></a>
+    <a class="ni" data-p="cycle" onclick="nav('cycle')"><span class="nav-icon">🌸</span><span class="nav-label">Siklus</span></a>
+    <a class="ni" data-p="water" onclick="nav('water')"><span class="nav-icon">💧</span><span class="nav-label">Air</span></a>
+    <a class="ni" data-p="dhikr" onclick="nav('dhikr')"><span class="nav-icon">📿</span><span class="nav-label">Dzikir</span></a>
+    <a class="ni" data-p="stats" onclick="nav('stats')"><span class="nav-icon">📊</span><span class="nav-label">Statistik</span></a>
+  </div>
+</div>
+
+<main class="main">
+
+<!-- ═══ DASHBOARD ═══ -->
+<div class="page active" id="page-dashboard">
+  <div class="hgrid">
+    <div class="hmain">
+      <div class="hg" id="hgreet">Assalamu'alaikum! 👋</div>
+      <div class="hd" id="hdate">Sabtu, 14 Maret 2026</div>
+      <div style="display:flex;align-items:center;justify-content:space-between;margin:8px 0 0 0">
+        <div>
+          <div class="hbig" id="htasks">0/0</div>
+          <div class="hsub">Ibadah selesai</div>
+        </div>
+        <svg class="msc" width="72" height="72" viewBox="0 0 64 64" style="flex-shrink:0">
+          <path d="M32 56C32 56 8 40 8 22c0-9 6-14 14-14 4 0 8 2 10 6 2-4 6-6 10-6 8 0 14 5 14 14 0 18-24 34-24 34z" fill="#e05575"/>
+          <path d="M32 54C32 54 10 39 10 22c0-8 6-12 12-12 4 0 7 2 10 6" fill="#f08090" opacity=".4"/>
+          <circle cx="24" cy="22" r="4" fill="white"/><circle cx="40" cy="22" r="4" fill="white"/>
+          <circle cx="25" cy="22" r="2" fill="#1e3a5a"/><circle cx="41" cy="22" r="2" fill="#1e3a5a"/>
+          <circle cx="26" cy="21" r=".8" fill="white"/><circle cx="42" cy="21" r=".8" fill="white"/>
+          <path d="M26 32 Q32 38 38 32" stroke="#1e3a5a" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <circle cx="21" cy="17" r="2" fill="#f8c8d0" opacity=".7"/><circle cx="43" cy="17" r="2" fill="#f8c8d0" opacity=".7"/>
+        </svg>
+      </div>
+    </div>
+    <!-- Right column: tad+sed row + perfect day stacked -->
+    <div style="display:flex;flex-direction:column;gap:11px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:9px;">
+        <div style="background:linear-gradient(135deg,#d0f0e0,#b0e8cc);border-radius:var(--r);padding:13px;box-shadow:var(--sh);">
+          <div style="font-size:10px;font-weight:800;color:#1a7050;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">📖 Juz Selesai</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:24px;color:#1a7050;line-height:1" id="htad">0/30</div>
+          <svg width="30" height="30" viewBox="0 0 44 44" style="margin-top:6px">
+            <rect x="6" y="4" width="32" height="36" rx="5" fill="#4db887"/>
+            <rect x="10" y="8" width="24" height="28" rx="3" fill="#f0c840"/>
+            <rect x="6" y="4" width="6" height="36" rx="3" fill="#30905a"/>
+            <circle cx="22" cy="16" r="3" fill="#e05575"/>
+            <circle cx="18" cy="22" r="2.5" fill="#5ba4cf"/><circle cx="19" cy="21" r="1" fill="white"/>
+            <circle cx="26" cy="22" r="2.5" fill="#5ba4cf"/><circle cx="27" cy="21" r="1" fill="white"/>
+            <path d="M18 28 Q22 32 26 28" stroke="#1e3a5a" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div style="background:linear-gradient(135deg,#fff0b0,#ffe880);border-radius:var(--r);padding:13px;box-shadow:var(--sh);">
+          <div style="font-size:10px;font-weight:800;color:#9a6800;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">💰 Sedekah</div>
+          <div style="font-family:'Fredoka One',cursive;font-size:18px;color:#9a6800;line-height:1" id="hsed">Rp 0</div>
+          <svg width="30" height="30" viewBox="0 0 44 44" style="margin-top:6px">
+            <ellipse cx="22" cy="20" rx="18" ry="16" fill="#f8d850"/>
+            <ellipse cx="22" cy="19" rx="16" ry="14" fill="#f0c840"/>
+            <circle cx="22" cy="19" r="8" fill="#e8b820"/>
+            <text x="22" y="23" text-anchor="middle" font-size="9" font-weight="bold" fill="white">Rp</text>
+          </svg>
+        </div>
+      </div>
+      <!-- Perfect Day banner in right column -->
+      <div class="pd" id="pdb" style="margin-bottom:0">
+        <div style="font-size:20px">🎉✨🎉</div>
+        <div style="font-family:'Fredoka One',cursive;font-size:15px">Hari Sempurna!</div>
+        <div style="font-size:10px;font-weight:700;opacity:.9;margin-top:2px">+100 XP Bonus 🏆</div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- GOALS HARIAN -->
+  <div class="card mb11">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+      <div class="stl" style="margin-bottom:0">🎯 Goals Hari Ini</div>
+      <button class="btn bg2 bsm" onclick="eg();snd('pop')">✏️ Ubah</button>
+    </div>
+    <div id="glist"></div>
+    <div id="gem" style="font-size:11px;color:var(--txm);font-weight:600;padding:7px 0;display:none">Belum ada goals. Tap "Ubah" untuk menambahkan! 🌟</div>
+  </div>
+
+  <!-- MOOD -->
+  <div class="card mb11">
+    <div class="cl">😊 Mood Hari Ini</div>
+    <div class="mr" id="dmr">
+      <div class="mb" data-mood="😊" onclick="sm(this,'d')">😊</div>
+      <div class="mb" data-mood="😌" onclick="sm(this,'d')">😌</div>
+      <div class="mb" data-mood="🤩" onclick="sm(this,'d')">🤩</div>
+      <div class="mb" data-mood="😔" onclick="sm(this,'d')">😔</div>
+      <div class="mb" data-mood="😤" onclick="sm(this,'d')">😤</div>
+      <div class="mb" data-mood="🥺" onclick="sm(this,'d')">🥺</div>
+      <div class="mb" data-mood="💪" onclick="sm(this,'d')">💪</div>
+      <div class="mb" data-mood="😴" onclick="sm(this,'d')">😴</div>
+      <div class="mb" data-mood="🌸" onclick="sm(this,'d')">🌸</div>
+      <div class="mb" data-mood="🥰" onclick="sm(this,'d')">🥰</div>
+      <div class="mb" data-mood="😇" onclick="sm(this,'d')">😇</div>
+      <div class="mb" data-mood="🤗" onclick="sm(this,'d')">🤗</div>
+    </div>
+    <div id="mmsg" style="font-size:11px;font-weight:700;color:var(--txm);margin-top:7px;display:none;padding:7px;background:var(--pink-p);border-radius:var(--rx)"></div>
+  </div>
+
+  <div class="g2 mb11">
+    <div class="lvc">
+      <div class="cl" style="color:rgba(255,255,255,.75)">Level Kamu</div>
+      <div class="lvn" id="dlvn">1</div>
+      <div class="lvna" id="dlvna">🌱 Pemula</div>
+      <div class="lvbb"><div class="lvbf" id="dlvb" style="width:0%"></div></div>
+      <div class="lvx" id="dlvx">0 / 300 XP ke Level 2</div>
+    </div>
+    <div class="strc">
+      <div style="font-size:34px">🔥</div>
+      <div><div class="strn" id="dstr">0</div><div style="font-size:11px;font-weight:700;opacity:.9">Hari Streak<br><span style="font-size:10px;opacity:.8">Jaga terus!</span></div></div>
+    </div>
+  </div>
+  <div style="background:linear-gradient(135deg,#ddeeff,#c8d8f8);border-radius:var(--r);padding:15px;box-shadow:var(--sh);margin-bottom:11px;">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div style="font-size:10px;font-weight:800;color:#2060a0;text-transform:uppercase;letter-spacing:.7px">📈 Progress Hari Ini</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:15px;color:#2060a0" id="dpct">0%</div>
+    </div>
+    <div style="background:rgba(91,164,207,.2);border-radius:100px;height:9px;overflow:hidden"><div class="pf pbl" id="dpb" style="width:0%"></div></div>
+    <div style="font-size:10px;font-weight:700;color:#2060a0;margin-top:4px;opacity:.8" id="dpl">0 dari 0 kebiasaan selesai</div>
+  </div>
+
+  <div class="g4 mb18">
+    <div class="smc" style="background:linear-gradient(135deg,#ddeeff,#c8d8f8)"><div class="smi">✅</div><div class="smv" id="st1" style="color:#2060a0">0</div><div class="sml" style="color:#2060a0">Tugas</div><div style="background:rgba(91,164,207,.2);border-radius:100px;height:7px;overflow:hidden"><div class="pf pbl" id="sb1" style="width:0%"></div></div></div>
+    <div class="smc" style="background:linear-gradient(135deg,#d0eeff,#b8dcf8)"><div class="smi">💧</div><div class="smv" id="st2" style="color:#1a6090">0</div><div class="sml" style="color:#1a6090">Air</div><div style="background:rgba(91,164,207,.2);border-radius:100px;height:7px;overflow:hidden"><div class="pf pbl" id="sb2" style="width:0%"></div></div></div>
+    <div class="smc" style="background:linear-gradient(135deg,#d0f0e0,#b0e8cc)"><div class="smi">📖</div><div class="smv" id="st3" style="color:#1a7050">Juz 0</div><div class="sml" style="color:#1a7050">Tadarus</div><div style="background:rgba(77,184,135,.2);border-radius:100px;height:7px;overflow:hidden"><div class="pf pgr" id="sb3" style="width:0%"></div></div></div>
+    <div class="smc" style="background:linear-gradient(135deg,#fff0b0,#ffe880)"><div class="smi">🕌</div><div class="smv" id="st4" style="color:#9a6800">0/5</div><div class="sml" style="color:#9a6800">Sholat</div><div style="background:rgba(240,184,64,.2);border-radius:100px;height:7px;overflow:hidden"><div class="pf pyl" id="sb4" style="width:0%"></div></div></div>
+  </div>
+
+  <div class="stl">🏆 Pencapaian</div>
+  <div class="tgrid">
+    <div class="titem"><div class="tico">🏆</div><div class="tnm">Langkah Pertama</div></div>
+    <div class="titem locked"><div class="tico">🔥</div><div class="tnm">Streak 7 Hari</div></div>
+    <div class="titem locked"><div class="tico">💎</div><div class="tnm">Pekan Sempurna</div></div>
+    <div class="titem locked"><div class="tico">👑</div><div class="tnm">Streak 30 Hari</div></div>
+    <div class="titem locked"><div class="tico">🌟</div><div class="tnm">Level 10</div></div>
+    <div class="titem locked"><div class="tico">💫</div><div class="tnm">Khatam</div></div>
+  </div>
+</div>
+
+<!-- ═══ AKTIVITAS ═══ -->
+<div class="page" id="page-activities">
+  <div class="ph"><div class="pht">Aktivitas <span>Harian</span> ✅</div><div class="phs">Selesaikan kebiasaan & kumpulkan XP!</div></div>
+  <div class="card mb11">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="cl" style="margin-bottom:0">XP Hari Ini</div>
+      <div style="font-family:'Fredoka One',cursive;font-size:16px;color:var(--blue-d)" id="axp">0 XP</div>
+    </div>
+    <div class="pw"><div class="pf ppk" id="apb" style="width:0%"></div></div>
+    <div style="font-size:10px;font-weight:700;color:var(--txm);margin-top:4px" id="albl">0 aktivitas selesai</div>
+  </div>
+  <div class="stl">🌅 Kebiasaanmu</div>
+  <div id="alist" style="display:flex;flex-direction:column;gap:8px;margin-bottom:13px"></div>
+  <button class="btn bp" onclick="oaa();snd('pop')">➕ Tambah Aktivitas</button>
+</div>
+
+<!-- ═══ SHOLAT ═══ -->
+<div class="page" id="page-sholat">
+  <div class="ph"><div class="pht">Pelacak <span>Sholat</span> 🕌</div><div class="phs">Tap 1× = Awal 🟢 | Tap 2× = Akhir 🔴 | Tap 3× = Reset</div></div>
+  <div class="card mb11">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">
+      <div class="cl" style="margin-bottom:0">Sholat Hari Ini</div>
+      <button class="btn bg2 bsm" onclick="openCS();snd('pop')">➕ Custom</button>
+    </div>
+    <div class="pgrid" id="pgrid" style="margin-top:8px"></div>
+    <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap">
+      <div class="clei"><div class="cld" style="background:var(--gr)"></div>Awal Waktu</div>
+      <div class="clei"><div class="cld" style="background:var(--rd)"></div>Akhir Waktu</div>
+      <div class="clei"><div class="cld" style="background:var(--blue-p);border:1px solid var(--blue-l)"></div>Belum</div>
+    </div>
+    <div style="margin-top:9px">
+      <div style="font-size:10px;font-weight:700;color:var(--txm);margin-bottom:3px" id="pst">0 dari 5 selesai</div>
+      <div class="pw"><div class="pf pyl" id="ppb" style="width:0%"></div></div>
+    </div>
+  </div>
+  <div class="card"><div class="cl">Konsistensi Mingguan</div><div class="cb" id="pcht"></div><div class="cls"><div class="clab">Sen</div><div class="clab">Sel</div><div class="clab">Rab</div><div class="clab">Kam</div><div class="clab">Jum</div><div class="clab">Sab</div><div class="clab">Min</div></div></div>
+</div>
+
+<!-- ═══ CHARITY ═══ -->
+<div class="page" id="page-charity">
+  <div class="ph"><div class="pht">Charity <span>Tracker</span> 💝</div><div class="phs">Catat sedekah dan donasimu</div></div>
+  <div class="g2 mb11">
+    <div class="smc"><div class="smi">💝</div><div class="smv" style="font-size:17px" id="cttl">Rp 0</div><div class="sml">Total Donasi</div></div>
+    <div class="smc"><div class="smi">🎯</div><div class="smv" id="cpct">0%</div><div class="sml">Target Bulanan</div><div class="pw"><div class="pf pgr" id="cpb" style="width:0%"></div></div></div>
+  </div>
+  <div class="card mb11"><div class="cl">Kalender Donasi — Maret 2026</div><div class="cg" id="ccal" style="margin-top:7px"></div></div>
+  <div class="card mb11"><div class="cl">Riwayat Donasi</div><div id="clist"></div></div>
+  <button class="btn bp" onclick="och();snd('pop')">➕ Catat Donasi</button>
+</div>
+
+<!-- ═══ JOURNAL ═══ -->
+<div class="page" id="page-journal">
+  <div class="ph"><div class="pht">Refleksi <span>Harian</span> 📔</div><div class="phs">Tuliskan perasaan dan syukurmu</div></div>
+  <div class="card mb11"><div class="cl">😊 Mood</div><div class="mr" id="jmr">
+    <div class="mb" data-mood="😊" onclick="sm(this,'j')">😊</div><div class="mb" data-mood="😌" onclick="sm(this,'j')">😌</div>
+    <div class="mb" data-mood="🤩" onclick="sm(this,'j')">🤩</div><div class="mb" data-mood="😔" onclick="sm(this,'j')">😔</div>
+    <div class="mb" data-mood="😤" onclick="sm(this,'j')">😤</div><div class="mb" data-mood="🥺" onclick="sm(this,'j')">🥺</div>
+    <div class="mb" data-mood="💪" onclick="sm(this,'j')">💪</div><div class="mb" data-mood="😴" onclick="sm(this,'j')">😴</div>
+    <div class="mb" data-mood="🌸" onclick="sm(this,'j')">🌸</div><div class="mb" data-mood="🥰" onclick="sm(this,'j')">🥰</div>
+    <div class="mb" data-mood="😇" onclick="sm(this,'j')">😇</div><div class="mb" data-mood="🤗" onclick="sm(this,'j')">🤗</div>
+  </div></div>
+  <div class="card mb11"><div class="cl">📝 Bagaimana harimu?</div><textarea class="jta" id="jt" placeholder="Ceritakan harimu..."></textarea></div>
+  <div class="card mb11"><div class="cl">🤲 Syukurku hari ini</div><textarea class="jta" id="jg" placeholder="3 hal yang aku syukuri..." style="min-height:72px"></textarea></div>
+  <div class="card mb11"><div class="cl">🌱 Niatku besok</div><textarea class="jta" id="jtm" placeholder="Rencanaku besok..." style="min-height:60px"></textarea></div>
+  <button class="btn bp" onclick="svj()">💾 Simpan Refleksi +15 XP</button>
+  <div id="jsvd" style="display:none;margin-top:9px" class="card"><div style="font-size:12px;font-weight:800;color:var(--gr)">✅ Refleksi tersimpan! Keren banget 🌟</div></div>
+  <div style="margin-top:18px"><div class="stl">📚 Refleksi Sebelumnya</div><div id="jhist" style="display:flex;flex-direction:column;gap:8px"></div></div>
+</div>
+
+<!-- ═══ CYCLE ═══ -->
+<div class="page" id="page-cycle">
+  <div class="ph"><div class="pht">Siklus <span>Haid</span> 🌸</div><div class="phs">Klik tanggal untuk catat warna darah & catatan 👆</div></div>
+  <div class="g2 mb11">
+    <div class="cyh"><div class="cl" style="color:var(--pink)">Hari ke-</div><div class="cyn" id="cyd">~</div><div style="font-size:11px;font-weight:700;color:var(--lilac)">Sejak haid terakhir</div></div>
+    <div class="smc"><div class="smi">📅</div><div class="smv" style="font-size:15px" id="cyn2">~</div><div class="sml">Prediksi Berikutnya</div></div>
+  </div>
+  <div class="card mb11">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:9px">
+      <div class="cl" style="margin-bottom:0">Kalender — Maret 2026</div>
+      <div style="font-size:10px;font-weight:700;color:var(--txm)">Klik tanggal 👆</div>
+    </div>
+    <div class="cg" id="cycal"></div>
+    <div class="cleg">
+      <div class="clei"><div class="cld" style="background:var(--rd)"></div>Merah (Deras)</div>
+      <div class="clei"><div class="cld" style="background:var(--pink)"></div>Pink (Ringan)</div>
+      <div class="clei"><div class="cld" style="background:var(--br)"></div>Coklat (Flek)</div>
+      <div class="clei"><div class="cld" style="background:var(--blue)"></div>Hari Ini</div>
+      <div class="clei"><div class="cld" style="background:var(--pink-l);border:1px dashed var(--pink)"></div>Prediksi</div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="cl">📝 Catat Periode</div>
+    <div style="display:flex;gap:7px;flex-wrap:wrap;align-items:flex-end">
+      <div style="flex:1"><label class="fl">Mulai</label><input type="date" class="fi" id="ps"></div>
+      <div style="flex:1"><label class="fl">Selesai</label><input type="date" class="fi" id="pe"></div>
+      <button class="btn bp bsm" onclick="svp()">💾 Simpan</button>
+    </div>
+    <div id="phist" style="margin-top:9px;display:flex;flex-direction:column;gap:6px"></div>
+  </div>
+</div>
+
+<!-- ═══ WATER ═══ -->
+<div class="page" id="page-water">
+  <div class="ph"><div class="pht">Minum <span>Air</span> 💧</div><div class="phs">Tetap terhidrasi, tetap sehat!</div></div>
+  <div class="card mb11" style="text-align:center">
+    <div style="display:flex;align-items:center;gap:7px;justify-content:center;margin-bottom:9px">
+      <div style="font-size:11px;font-weight:800;color:var(--txm)">Target:</div>
+      <input type="number" class="wti" id="wt" value="8" min="1" max="50" onchange="uwui()">
+      <div style="font-size:11px;font-weight:800;color:var(--txm)">gelas</div>
+    </div>
+    <div class="wn" id="wnum">0</div>
+    <div style="font-size:13px;font-weight:700;color:var(--txm)">gelas air hari ini</div>
+    <div style="margin:11px 0">
+      <div class="pw" style="height:10px"><div class="pf pbl" id="wpb" style="width:0%"></div></div>
+      <div style="font-size:10px;font-weight:700;color:var(--txm);margin-top:3px" id="wlbl">0 dari 8 gelas</div>
+    </div>
+    <div class="wdrops" id="wdrops"></div>
+    <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap">
+      <button class="btn bp" onclick="aw()">💧 Tambah Segelas</button>
+      <button class="btn bo" onclick="rw2()">↩ Kurangi</button>
+    </div>
+  </div>
+  <div class="card"><div class="cl">Tren Mingguan</div><div class="cb" id="wcht"></div><div class="cls"><div class="clab">Sen</div><div class="clab">Sel</div><div class="clab">Rab</div><div class="clab">Kam</div><div class="clab">Jum</div><div class="clab">Sab</div><div class="clab">Min</div></div></div>
+</div>
+
+<!-- ═══ DHIKR ═══ -->
+<div class="page" id="page-dhikr">
+  <div class="ph"><div class="pht">Dzikir <span>Pagi & Petang</span> 📿</div><div class="phs">Perkuat koneksi spiritualmu setiap hari</div></div>
+  <div class="tabs"><div class="tab active" onclick="sdh('p',this)">🌅 Dzikir Pagi</div><div class="tab" onclick="sdh('e',this)">🌙 Dzikir Petang</div></div>
+  <div id="dhps"><div id="dhpl" style="display:flex;flex-direction:column;gap:8px"></div><div style="margin-top:11px"><button class="btn bg2 bsm" onclick="oadh('p')">➕ Tambah Dzikir Pagi</button></div></div>
+  <div id="dhes" style="display:none"><div id="dhel" style="display:flex;flex-direction:column;gap:8px"></div><div style="margin-top:11px"><button class="btn bg2 bsm" onclick="oadh('e')">➕ Tambah Dzikir Petang</button></div></div>
+  <div class="card" style="margin-top:13px">
+    <div class="cl">Progress Dzikir</div>
+    <div style="display:flex;gap:11px;margin-top:5px">
+      <div style="flex:1"><div style="font-size:10px;font-weight:700;color:var(--txm);margin-bottom:3px">🌅 Pagi</div><div class="pw"><div class="pf ppk" id="dpb2" style="width:0%"></div></div><div style="font-size:9px;font-weight:700;color:var(--txm);margin-top:2px" id="dpl2">0/5</div></div>
+      <div style="flex:1"><div style="font-size:10px;font-weight:700;color:var(--txm);margin-bottom:3px">🌙 Petang</div><div class="pw"><div class="pf pbl" id="deb" style="width:0%"></div></div><div style="font-size:9px;font-weight:700;color:var(--txm);margin-top:2px" id="del">0/5</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ STATISTIK ═══ -->
+<div class="page" id="page-stats">
+  <div class="ph"><div class="pht">Statistik <span>Kamu</span> 📊</div><div class="phs">Pantau perkembangan keseluruhanmu</div></div>
+  <div class="g4 mb11">
+    <div class="smc"><div class="smi">⚡</div><div class="smv" id="sxp">0</div><div class="sml">Total XP</div></div>
+    <div class="smc"><div class="smi">🔥</div><div class="smv" id="sstk">0</div><div class="sml">Streak</div></div>
+    <div class="smc"><div class="smi">✅</div><div class="smv" id="sdn">0</div><div class="sml">Tugas</div></div>
+    <div class="smc"><div class="smi">🕌</div><div class="smv" id="spr">0%</div><div class="sml">Sholat</div></div>
+  </div>
+  <!-- TADARUS EDITABLE -->
+  <div class="tc">
+    <div style="display:flex;align-items:center;justify-content:space-between">
+      <div class="tct">📖 Tadarus Al-Qur'an</div>
+      <div style="display:flex;align-items:center;gap:6px">
+        <span style="font-size:11px;font-weight:700;color:var(--txm)">Sampai Juz</span>
+        <input type="number" id="tjuz" min="0" max="30" value="0" style="width:50px;padding:4px 7px;border-radius:var(--rx);border:2px solid var(--blue-l);font-family:'Fredoka One',cursive;font-size:14px;color:var(--blue-d);text-align:center;outline:none;background:var(--blue-p);" onchange="utad()">
+        <span style="font-size:11px;font-weight:700;color:var(--txm)">/ 30</span>
+      </div>
+    </div>
+    <div class="tdg" id="tdots"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:9px">
+      <svg width="38" height="38" viewBox="0 0 44 44"><rect x="6" y="4" width="32" height="36" rx="5" fill="#4db887"/><rect x="8" y="6" width="28" height="32" rx="4" fill="#70d0a0"/><rect x="10" y="8" width="24" height="28" rx="3" fill="#f0c840"/><rect x="6" y="4" width="6" height="36" rx="3" fill="#30905a"/><circle cx="22" cy="14" r="3" fill="#e05575"/><circle cx="18" cy="20" r="2.5" fill="#5ba4cf"/><circle cx="19" cy="19" r="1" fill="white"/><circle cx="26" cy="20" r="2.5" fill="#5ba4cf"/><circle cx="27" cy="19" r="1" fill="white"/><path d="M18 26 Q22 30 26 26" stroke="#1e3a5a" stroke-width="1.5" fill="none" stroke-linecap="round"/></svg>
+      <div style="font-family:'Fredoka One',cursive;font-size:20px;color:var(--tx)" id="tcnt">0 / 30 Juz</div>
+    </div>
+    <div class="pw" style="margin-top:7px;height:9px"><div class="pf pgr" id="tbar" style="width:0%"></div></div>
+  </div>
+  <div class="tc"><div class="tct">💝 Sedekah</div><div class="tdg" id="cdots"></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:9px"><div style="font-size:26px">💰</div><div style="font-family:'Fredoka One',cursive;font-size:20px;color:var(--tx)" id="scht">Rp 0</div></div></div>
+  <div class="tc"><div class="tct">📔 Refleksi Harian</div><div class="tdg" id="jdots"></div><div style="display:flex;align-items:center;justify-content:space-between;margin-top:9px"><div style="font-size:26px">🖊️</div><div style="font-family:'Fredoka One',cursive;font-size:20px;color:var(--tx)" id="jcnt">0 / 30</div></div></div>
+  <div class="tc">
+    <div class="tct">🕌 Sholat 5 Waktu</div>
+    <div class="tdg" id="sdots"></div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-top:9px">
+      <svg width="38" height="38" viewBox="0 0 40 40"><rect x="5" y="22" width="30" height="14" rx="3" fill="#5ba4cf"/><rect x="10" y="16" width="20" height="8" rx="2" fill="#a8d4f0"/><ellipse cx="20" cy="16" rx="8" ry="5" fill="#3a7ab0"/><rect x="18" y="4" width="4" height="14" rx="2" fill="#f0c840"/><circle cx="20" cy="4" r="2.5" fill="#f0a840"/><rect x="7" y="24" width="5" height="10" rx="2" fill="#3a7ab0"/><rect x="28" y="24" width="5" height="10" rx="2" fill="#3a7ab0"/><rect x="14" y="28" width="12" height="8" rx="2" fill="#e8f4ff"/><ellipse cx="20" cy="28" rx="4" ry="3" fill="#5ba4cf"/></svg>
+      <div style="font-family:'Fredoka One',cursive;font-size:20px;color:var(--tx)" id="shcnt">0 / 150</div>
+    </div>
+  </div>
+  <div class="card"><div class="cl">Tugas Mingguan</div><div class="cb" id="stcht"></div><div class="cls"><div class="clab">Sen</div><div class="clab">Sel</div><div class="clab">Rab</div><div class="clab">Kam</div><div class="clab">Jum</div><div class="clab">Sab</div><div class="clab">Min</div></div></div>
+</div>
+
+</main>
+</div>
+
+<!-- MODALS -->
+<div class="ov" id="nmm"><div class="modal"><div class="mt">✏️ Ubah Nama</div><div class="fg"><label class="fl">Nama Kamu</label><input class="fi" id="nmi" placeholder="Masukkan namamu..."></div><div class="fg"><label class="fl">Pilih Avatar</label><div class="er" id="avr"><div class="ep sel" onclick="pav(this)">🌟</div><div class="ep" onclick="pav(this)">🌸</div><div class="ep" onclick="pav(this)">🦋</div><div class="ep" onclick="pav(this)">🌙</div><div class="ep" onclick="pav(this)">🌻</div><div class="ep" onclick="pav(this)">💫</div><div class="ep" onclick="pav(this)">🌺</div><div class="ep" onclick="pav(this)">✨</div><div class="ep" onclick="pav(this)">🌈</div><div class="ep" onclick="pav(this)">🍀</div><div class="ep" onclick="pav(this)">🦄</div><div class="ep" onclick="pav(this)">🌷</div></div></div><div class="mf"><button class="btn bo" onclick="co('nmm')">Batal</button><button class="btn bp" onclick="svn()">💾 Simpan</button></div></div></div>
+<div class="ov" id="aam"><div class="modal"><div class="mt">➕ Tambah Aktivitas</div><div class="fg"><label class="fl">Nama</label><input class="fi" id="nan" placeholder="cth. Jalan Pagi"></div><div class="fg"><label class="fl">Kategori</label><select class="fi" id="nac"><option>Ibadah</option><option>Kesehatan</option><option>Belajar</option><option>Pribadi</option><option>Lainnya</option></select></div><div class="fg"><label class="fl">Emoji (scroll untuk lebih banyak)</label><div class="er" id="aer">
+<div class="ep sel" onclick="pae(this)">⭐</div><div class="ep" onclick="pae(this)">📚</div><div class="ep" onclick="pae(this)">🏃</div><div class="ep" onclick="pae(this)">🧘</div><div class="ep" onclick="pae(this)">💪</div><div class="ep" onclick="pae(this)">🎯</div><div class="ep" onclick="pae(this)">🌱</div><div class="ep" onclick="pae(this)">🎨</div><div class="ep" onclick="pae(this)">🎵</div><div class="ep" onclick="pae(this)">💻</div><div class="ep" onclick="pae(this)">🍎</div><div class="ep" onclick="pae(this)">☀️</div><div class="ep" onclick="pae(this)">🏊</div><div class="ep" onclick="pae(this)">🚴</div><div class="ep" onclick="pae(this)">🧹</div><div class="ep" onclick="pae(this)">✍️</div><div class="ep" onclick="pae(this)">🎤</div><div class="ep" onclick="pae(this)">🎸</div><div class="ep" onclick="pae(this)">🍳</div><div class="ep" onclick="pae(this)">🌿</div><div class="ep" onclick="pae(this)">🤸</div><div class="ep" onclick="pae(this)">🧠</div><div class="ep" onclick="pae(this)">💊</div><div class="ep" onclick="pae(this)">🛌</div><div class="ep" onclick="pae(this)">🧴</div><div class="ep" onclick="pae(this)">🌅</div><div class="ep" onclick="pae(this)">🌙</div><div class="ep" onclick="pae(this)">🤲</div><div class="ep" onclick="pae(this)">📖</div><div class="ep" onclick="pae(this)">🕌</div><div class="ep" onclick="pae(this)">💆</div><div class="ep" onclick="pae(this)">🎭</div><div class="ep" onclick="pae(this)">🧩</div><div class="ep" onclick="pae(this)">🏋️</div><div class="ep" onclick="pae(this)">🦷</div><div class="ep" onclick="pae(this)">💧</div><div class="ep" onclick="pae(this)">🍵</div><div class="ep" onclick="pae(this)">🥗</div><div class="ep" onclick="pae(this)">🍇</div><div class="ep" onclick="pae(this)">🏅</div><div class="ep" onclick="pae(this)">🌊</div><div class="ep" onclick="pae(this)">🦋</div><div class="ep" onclick="pae(this)">🌺</div><div class="ep" onclick="pae(this)">🌈</div><div class="ep" onclick="pae(this)">💎</div><div class="ep" onclick="pae(this)">🔮</div><div class="ep" onclick="pae(this)">🏠</div><div class="ep" onclick="pae(this)">🚶</div><div class="ep" onclick="pae(this)">📓</div><div class="ep" onclick="pae(this)">🧪</div><div class="ep" onclick="pae(this)">🌍</div><div class="ep" onclick="pae(this)">🎁</div><div class="ep" onclick="pae(this)">🌼</div><div class="ep" onclick="pae(this)">🦚</div><div class="ep" onclick="pae(this)">🕊️</div><div class="ep" onclick="pae(this)">🥑</div><div class="ep" onclick="pae(this)">🍓</div><div class="ep" onclick="pae(this)">☕</div><div class="ep" onclick="pae(this)">🧘‍♀️</div><div class="ep" onclick="pae(this)">🏄</div><div class="ep" onclick="pae(this)">🎻</div><div class="ep" onclick="pae(this)">🌙</div>
+</div></div><div class="fg"><label class="fl">XP Reward</label><select class="fi" id="nax"><option value="5">5 XP</option><option value="10" selected>10 XP</option><option value="15">15 XP</option><option value="20">20 XP</option></select></div><div class="mf"><button class="btn bo" onclick="co('aam')">Batal</button><button class="btn bp" onclick="saa()">Simpan</button></div></div></div>
+<div class="ov" id="chm"><div class="modal"><div class="mt">💝 Catat Donasi</div><div class="fg"><label class="fl">Nominal (Rp)</label><input class="fi" id="cha" type="number" placeholder="cth. 50000"></div><div class="fg"><label class="fl">Catatan</label><input class="fi" id="chn" placeholder="cth. Sedekah Jumat"></div><div class="fg"><label class="fl">Tanggal</label><input class="fi" id="chd" type="date"></div><div class="mf"><button class="btn bo" onclick="co('chm')">Batal</button><button class="btn bp" onclick="svch()">Simpan</button></div></div></div>
+<div class="ov" id="dhm"><div class="modal"><div class="mt" id="dht">➕ Tambah Dzikir</div><input type="hidden" id="dhtp"><div class="fg"><label class="fl">Nama Dzikir</label><input class="fi" id="dhn" placeholder="cth. Shalawat 100x"></div><div class="fg"><label class="fl">Teks Arab (opsional)</label><input class="fi" id="dha" style="direction:rtl"></div><div class="fg"><label class="fl">XP</label><select class="fi" id="dhx"><option value="3">3 XP</option><option value="5" selected>5 XP</option><option value="8">8 XP</option><option value="10">10 XP</option></select></div><div class="mf"><button class="btn bo" onclick="co('dhm')">Batal</button><button class="btn bp" onclick="svdh()">Simpan</button></div></div></div>
+<div class="ov" id="gm"><div class="modal"><div class="mt">🎯 Goals Hari Ini</div><div style="font-size:11px;font-weight:700;color:var(--txm);margin-bottom:11px">Tulis 3 prioritas kegiatanmu hari ini</div><div class="fg"><label class="fl">Goal 1</label><input class="fi" id="g1" placeholder="cth. Selesaikan laporan..."></div><div class="fg"><label class="fl">Goal 2</label><input class="fi" id="g2" placeholder="cth. Olahraga pagi..."></div><div class="fg"><label class="fl">Goal 3</label><input class="fi" id="g3" placeholder="cth. Tadarus 1 juz..."></div><div class="mf"><button class="btn bo" onclick="co('gm')">Batal</button><button class="btn bp" onclick="svg2()">💾 Simpan</button></div></div></div>
+
+<script>
+// ── AUDIO ──
+let _AC=null; function getAC(){if(!_AC){try{_AC=new(window.AudioContext||window.webkitAudioContext)();}catch(e){}} return _AC;}
+function snd(t){try{const AC=getAC();if(!AC)return;const o=AC.createOscillator(),g=AC.createGain();o.connect(g);g.connect(AC.destination);const n=AC.currentTime;if(t==='pop'){o.type='sine';o.frequency.setValueAtTime(520,n);o.frequency.exponentialRampToValueAtTime(800,n+.08);g.gain.setValueAtTime(.15,n);g.gain.exponentialRampToValueAtTime(.001,n+.15);o.start(n);o.stop(n+.15);}else if(t==='done'){o.type='sine';o.frequency.setValueAtTime(600,n);o.frequency.setValueAtTime(800,n+.08);o.frequency.setValueAtTime(1050,n+.17);g.gain.setValueAtTime(.14,n);g.gain.exponentialRampToValueAtTime(.001,n+.3);o.start(n);o.stop(n+.3);}else if(t==='xp'){o.type='triangle';o.frequency.setValueAtTime(400,n);o.frequency.exponentialRampToValueAtTime(1200,n+.22);g.gain.setValueAtTime(.11,n);g.gain.exponentialRampToValueAtTime(.001,n+.26);o.start(n);o.stop(n+.26);}else if(t==='drop'){o.type='sine';o.frequency.setValueAtTime(900,n);o.frequency.exponentialRampToValueAtTime(300,n+.12);g.gain.setValueAtTime(.13,n);g.gain.exponentialRampToValueAtTime(.001,n+.15);o.start(n);o.stop(n+.15);}else if(t==='save'){[0,.1,.2].forEach((d,i)=>{const o2=AC.createOscillator(),g2=AC.createGain();o2.connect(g2);g2.connect(AC.destination);o2.type='sine';o2.frequency.setValueAtTime([523,659,784][i],n+d);g2.gain.setValueAtTime(.11,n+d);g2.gain.exponentialRampToValueAtTime(.001,n+d+.15);o2.start(n+d);o2.stop(n+d+.15);});return;}else if(t==='nav'){o.type='sine';o.frequency.setValueAtTime(440,n);o.frequency.setValueAtTime(550,n+.06);g.gain.setValueAtTime(.07,n);g.gain.exponentialRampToValueAtTime(.001,n+.12);o.start(n);o.stop(n+.12);}else{o.type='square';o.frequency.setValueAtTime(200,n);g.gain.setValueAtTime(.04,n);g.gain.exponentialRampToValueAtTime(.001,n+.05);o.start(n);o.stop(n+.05);}}catch(e){}}
+// ── STATE ──
+const S={name:'Nama Kamu',customSholat:[],avatar:'🌟',sav:'🌟',xp:0,txp:0,lvl:1,streak:0,mood:'',jmood:'',water:0,wt:8,actEmoji:'⭐',tadjuz:0,goals:[{t:'',d:false},{t:'',d:false},{t:'',d:false}],acts:[{id:1,n:"Tadarus Al-Qur'an",e:'📖',xp:12,d:false,c:'Ibadah'},{id:2,n:'Jalan Pagi',e:'☀️',xp:8,d:false,c:'Kesehatan'},{id:3,n:'Belajar Bahasa Inggris',e:'📚',xp:10,d:false,c:'Belajar'},{id:4,n:'Olahraga 30 Menit',e:'💪',xp:10,d:false,c:'Kesehatan'},{id:5,n:'Makan Sehat',e:'🥗',xp:7,d:false,c:'Kesehatan'},{id:6,n:'Tidur Cukup',e:'😴',xp:8,d:false,c:'Kesehatan'}],prayers:[{id:'subuh',n:'Subuh',e:'🌅',t:'04:30',s:0},{id:'dzuhur',n:'Dzuhur',e:'☀️',t:'12:00',s:0},{id:'ashar',n:'Ashar',e:'🌤️',t:'15:30',s:0},{id:'maghrib',n:'Maghrib',e:'🌇',t:'18:15',s:0},{id:'isya',n:'Isya',e:'🌙',t:'19:30',s:0}],charity:[],cgoal:500000,journals:[],periods:[],cdd:{},sdays:[],mdhikr:[{id:'md1',t:'Membaca Ayat Kursi',a:'آيَةُ الْكُرْسِيِّ',xp:5,d:false},{id:'md2',t:'Subhanallah 33x',a:'سُبْحَانَ اللهِ',xp:5,d:false},{id:'md3',t:'Alhamdulillah 33x',a:'الْحَمْدُ لِلهِ',xp:5,d:false},{id:'md4',t:'Allahu Akbar 34x',a:'اللهُ أَكْبَرُ',xp:5,d:false},{id:'md5',t:'Istighfar 100x',a:'أَسْتَغْفِرُ اللهَ',xp:5,d:false}],edhikr:[{id:'ed1',t:'Surat Al-Mulk',a:'تَبَارَكَ الَّذِي بِيَدِهِ الْمُلْكُ',xp:8,d:false},{id:'ed2',t:'Shalawat 100x',a:'صَلَّى اللهُ عَلَيْهِ وَسَلَّمَ',xp:5,d:false},{id:'ed3',t:'Doa Perlindungan',a:'أَعُوذُ بِكَلِمَاتِ اللهِ التَّامَّاتِ',xp:5,d:false},{id:'ed4',t:'Tasbih Malam',a:'سُبْحَانَ اللهِ وَبِحَمْدِهِ',xp:5,d:false},{id:'ed5',t:'Doa Sebelum Tidur',a:'اللَّهُمَّ بِاسْمِكَ أَمُوتُ',xp:5,d:false}]};
+function ls(){try{const s=localStorage.getItem('noor4');if(s)Object.assign(S,JSON.parse(s));}catch(e){}}
+function ss(){try{localStorage.setItem('noor4',JSON.stringify(S));}catch(e){}}
+// ── NAV ──
+function nav(p){
+  snd('pop');
+  document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));
+  document.querySelectorAll('.ni').forEach(x=>x.classList.remove('active'));
+  document.getElementById('page-'+p).classList.add('active');
+  document.querySelectorAll('[data-p="'+p+'"]').forEach(x=>x.classList.add('active'));
+  // scroll active tab into view
+  const el=document.querySelector('[data-p="'+p+'"]');
+  if(el)el.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});
+  rp(p);
+}
+function rp(p){({dashboard:rd,activities:ra,sholat:rsh,charity:rch,journal:rj,cycle:rc,water:rw,dhikr:rdh,stats:rst})[p]?.();}
+function tsb(v){/* no sidebar */}
+// ── XP ──
+function axp(a,m){S.xp+=a;S.txp+=a;us();ss();snd('xp');st('✨ +'+a+' XP! '+(m||''));ud();}
+function us(){const t=new Date().toDateString();if(!S.sdays.includes(t)){S.sdays.push(t);const y=new Date(Date.now()-86400000).toDateString();S.streak=(S.sdays.includes(y)||S.sdays.length===1)?(S.streak||0)+1:1;}}
+function clvl(x){return Math.max(1,Math.floor(x/300)+1);}
+function st(m){const t=document.getElementById('toast');document.getElementById('tmsg').textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),2600);}
+function co(id){document.getElementById(id).classList.remove('show');}
+// ── DASHBOARD ──
+function rd(){document.getElementById('hdate').textContent=new Date().toLocaleDateString('id-ID',{weekday:'long',year:'numeric',month:'long',day:'numeric'});ud();rg();sync_mood();}
+function ud(){const lv=clvl(S.txp);S.lvl=lv;const ls=['🌱 Pemula','⭐ Bintang Baru','🌟 Cahaya','💫 Pengejar','🚀 Roket','🌙 Penjelajah','☀️ Pencari','🌈 Pelangi','💎 Berlian','👑 Legenda'];const ln=ls[Math.min(lv-1,ls.length-1)];const xb=(lv-1)*300,xn=lv*300,lp=Math.min(100,((S.txp-xb)/(xn-xb))*100);const dn=S.acts.filter(a=>a.d).length,tot=S.acts.length,pd=S.prayers.filter(p=>p.s>0).length,ct=S.charity.reduce((s,c)=>s+c.a,0),np=S.prayers.find(p=>p.s===0);
+  document.getElementById('hgreet').textContent="Assalamu'alaikum, "+S.name+"! 👋";document.getElementById('htasks').textContent=dn+' / '+tot;document.getElementById('htad').textContent=S.tadjuz+'/30';document.getElementById('hsed').textContent='Rp '+(ct>=1000000?(ct/1000000).toFixed(1)+'Jt':ct.toLocaleString('id-ID'));try{document.getElementById('hnxt').textContent=np?'Sholat '+np.n:'Semua sholat selesai! ✅';}catch(e){}
+  document.getElementById('dlvn').textContent=lv;document.getElementById('dlvna').textContent=ln;document.getElementById('dlvb').style.width=lp+'%';document.getElementById('dlvx').textContent=S.txp+' / '+xn+' XP ke Level '+(lv+1);document.getElementById('dstr').textContent=S.streak;
+  const pct=tot>0?Math.round(dn/tot*100):0;document.getElementById('dpb').style.width=pct+'%';document.getElementById('dpct').textContent=pct+'%';document.getElementById('dpl').textContent=dn+' dari '+tot+' kebiasaan selesai';
+  document.getElementById('st1').textContent=dn;document.getElementById('sb1').style.width=pct+'%';document.getElementById('st2').textContent=S.water+'/'+S.wt;document.getElementById('sb2').style.width=Math.min(100,S.water/S.wt*100)+'%';document.getElementById('st3').textContent='Juz '+S.tadjuz;document.getElementById('sb3').style.width=S.tadjuz/30*100+'%';document.getElementById('st4').textContent=pd+'/5';document.getElementById('sb4').style.width=pd/5*100+'%';
+  document.getElementById('sbnm').textContent=S.name;
+  document.getElementById('sbav').textContent=S.avatar;
+  try{document.getElementById('sblv').textContent='Level '+lv+' · '+S.txp+' XP';}catch(e){}
+  const pb=document.getElementById('pdb');if(dn===tot&&tot>0)pb.classList.add('show');else pb.classList.remove('show');}
+// ── GOALS ──
+function eg(){snd('pop');document.getElementById('g1').value=S.goals[0].t;document.getElementById('g2').value=S.goals[1].t;document.getElementById('g3').value=S.goals[2].t;document.getElementById('gm').classList.add('show');}
+function svg2(){S.goals[0]={t:document.getElementById('g1').value.trim(),d:S.goals[0].d};S.goals[1]={t:document.getElementById('g2').value.trim(),d:S.goals[1].d};S.goals[2]={t:document.getElementById('g3').value.trim(),d:S.goals[2].d};co('gm');snd('save');ss();rg();}
+function rg(){const l=document.getElementById('glist'),e=document.getElementById('gem');const h=S.goals.some(g=>g.t);l.innerHTML='';e.style.display=h?'none':'block';if(!h)return;S.goals.forEach((g,i)=>{if(!g.t)return;const d=document.createElement('div');d.className='gi';d.innerHTML='<div class="gck '+(g.d?'done':'')+'" onclick="tg('+i+')">'+(g.d?'✓':'')+'</div><div class="gtx '+(g.d?'done':'')+'">'+g.t+'</div>';l.appendChild(d);});}
+function tg(i){snd(S.goals[i].d?'click':'done');S.goals[i].d=!S.goals[i].d;if(S.goals[i].d)axp(5,'🎯 Goal selesai!');else{S.xp=Math.max(0,S.xp-5);S.txp=Math.max(0,S.txp-5);}ss();rg();ud();}
+// ── MOOD ──
+function sm(el,ctx){snd('pop');if(ctx==='d'){S.mood=el.dataset.mood;sync_mood();}else{S.jmood=el.dataset.mood;document.querySelectorAll('#jmr .mb').forEach(b=>b.classList.toggle('sel',b.dataset.mood===S.jmood));}ss();}
+function sync_mood(){document.querySelectorAll('#dmr .mb').forEach(b=>b.classList.toggle('sel',b.dataset.mood===S.mood));if(S.mood){const ms={'😊':'Alhamdulillah, harimu menyenangkan! 😊','😌':'Tenang dan damai ya 😌','🤩':'Semangat banget! 🤩','😔':'Sabar ya, semua akan baik 🤲','😤':'Istirahat, tarik napas 🌸','🥺':'Peluk dari jauh 🤗','💪':'Kamu kuat! Tetap semangat 💪','😴':'Jangan lupa istirahat 😴','🌸':'Indah seperti bunga 🌸','🥰':'Hari penuh cinta 🥰','😇':'Hari yang tenang dan berkah 😇','🤗':'Hari yang hangat penuh pelukan 🤗'};document.getElementById('mmsg').style.display='block';document.getElementById('mmsg').textContent=ms[S.mood]||'';}}
+// ── ACTIVITIES ──
+function ra(){const l=document.getElementById('alist');l.innerHTML='';S.acts.forEach(a=>{const d=document.createElement('div');d.className='ac'+(a.d?' done':'');d.innerHTML='<div class="aem">'+a.e+'</div><div style="flex:1"><div class="an">'+a.n+'</div><div class="am">+'+a.xp+' XP · '+a.c+'</div></div><div class="ack">'+(a.d?'✓':'')+'</div><button class="adl" onclick="dal('+a.id+',event)">🗑</button>';d.addEventListener('click',ev=>{if(ev.target.tagName==='BUTTON')return;ta2(a.id);});l.appendChild(d);});uau();}
+function ta2(id){const a=S.acts.find(x=>x.id===id);if(!a)return;if(!a.d){a.d=true;snd('done');axp(a.xp,'🏆 Selesai!');}else{a.d=false;snd('click');S.xp=Math.max(0,S.xp-a.xp);S.txp=Math.max(0,S.txp-a.xp);}ss();ra();ud();if(S.acts.every(x=>x.d))setTimeout(()=>axp(100,'🎉 Hari Sempurna!'),400);}
+function dal(id,e){e.stopPropagation();snd('click');S.acts=S.acts.filter(a=>a.id!==id);ss();ra();ud();}
+function uau(){const dn=S.acts.filter(a=>a.d).length,tot=S.acts.length,xe=S.acts.filter(a=>a.d).reduce((s,a)=>s+a.xp,0);document.getElementById('axp').textContent=xe+' XP';document.getElementById('apb').style.width=(tot>0?dn/tot*100:0)+'%';document.getElementById('albl').textContent=dn+' dari '+tot+' aktivitas selesai';}
+function oaa(){document.getElementById('aam').classList.add('show');}
+function pae(el){document.querySelectorAll('#aer .ep').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');S.actEmoji=el.textContent;snd('click');}
+function saa(){const n=document.getElementById('nan').value.trim();if(!n)return;S.acts.push({id:Date.now(),n,c:document.getElementById('nac').value,e:S.actEmoji,xp:parseInt(document.getElementById('nax').value),d:false});co('aam');snd('save');document.getElementById('nan').value='';ss();ra();st('✅ Aktivitas ditambahkan!');}
+// ── SHOLAT ──
+function rsh(){const g=document.getElementById('pgrid');g.innerHTML='';S.prayers.forEach(p=>{const cls=p.s===1?'awal':p.s===2?'akhir':'';const b=p.s===1?'✅ Awal':p.s===2?'⏰ Akhir':'○ Belum';const d=document.createElement('div');d.className='pc '+cls;d.innerHTML='<div class="pe2">'+p.e+'</div><div class="pn">'+p.n+'</div><div class="pt">'+p.t+'</div><div class="pb2">'+b+'</div>'+(p.custom?'<div onclick="delCS(\''+p.id+'\',event)" style="font-size:9px;color:rgba(255,100,100,.9);cursor:pointer;margin-top:3px">🗑 hapus</div>':'');d.addEventListener('click',()=>cp(p.id));g.appendChild(d);});const dn=S.prayers.filter(p=>p.s>0).length;document.getElementById('pst').textContent=dn+' dari 5 selesai';document.getElementById('ppb').style.width=dn/5*100+'%';bc('pcht',[5,5,4,5,5,dn,0],5,'#f0c840');}
+function cp(id){const p=S.prayers.find(x=>x.id===id);if(p.s===0){p.s=1;snd('done');axp(10,'🕌 Awal Waktu! Masya Allah');}else if(p.s===1){p.s=2;snd('pop');axp(5,'🕌 Akhir Waktu');}else{p.s=0;snd('click');S.xp=Math.max(0,S.xp-5);S.txp=Math.max(0,S.txp-5);}ss();rsh();ud();}
+// ── CHARITY ──
+function rch(){const tot=S.charity.reduce((s,c)=>s+c.a,0);document.getElementById('cttl').textContent='Rp '+tot.toLocaleString('id-ID');const pct=Math.min(100,Math.round(tot/S.cgoal*100));document.getElementById('cpct').textContent=pct+'%';document.getElementById('cpb').style.width=pct+'%';rcal('ccal',S.charity.map(c=>parseInt(c.dt.split('-')[2])).filter(Boolean),14,[]);const l=document.getElementById('clist');l.innerHTML=S.charity.length?'':'<div style="font-size:11px;color:var(--txm);font-weight:600;padding:7px 0">Belum ada donasi 🌙</div>';S.charity.forEach(c=>{const d=document.createElement('div');d.style.cssText='display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--blue-p);';d.innerHTML='<div style="font-size:17px">💝</div><div style="flex:1"><div style="font-size:12px;font-weight:800;color:var(--gr)">+Rp '+c.a.toLocaleString('id-ID')+'</div><div style="font-size:10px;color:var(--txm);font-weight:600">'+c.n+'</div></div><div style="font-size:10px;color:var(--txl);font-weight:600">'+c.dt+'</div><button onclick="dch(\''+c.id+'\')" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--txl)">🗑</button>';l.appendChild(d);});}
+function dch(id){snd('click');S.charity=S.charity.filter(c=>c.id!==id);ss();rch();}
+function och(){const t=new Date().toISOString().split('T')[0];document.getElementById('chd').value=t;document.getElementById('chm').classList.add('show');}
+function svch(){const a=parseInt(document.getElementById('cha').value);if(!a)return;S.charity.unshift({id:Date.now().toString(),a,n:document.getElementById('chn').value.trim()||'Donasi',dt:document.getElementById('chd').value});co('chm');axp(20,'💝 Semoga berkah 🤲');document.getElementById('cha').value='';document.getElementById('chn').value='';ss();rch();}
+// ── JOURNAL ──
+function rj(){document.querySelectorAll('#jmr .mb').forEach(b=>b.classList.toggle('sel',b.dataset.mood===S.jmood));const h=document.getElementById('jhist');h.innerHTML='';S.journals.slice().reverse().forEach(j=>{const d=document.createElement('div');d.className='card';d.innerHTML='<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px"><div style="font-size:10px;font-weight:700;color:var(--txm)">'+j.date+'</div><div style="font-size:20px">'+j.mood+'</div></div><div style="font-size:12px;font-weight:600;color:var(--tx);line-height:1.6">'+j.text+'</div>'+(j.grat?'<div style="margin-top:6px;font-size:10px;color:var(--blue-d);font-weight:700">🤲 '+j.grat+'</div>':'');h.appendChild(d);});}
+function svj(){const text=document.getElementById('jt').value.trim(),grat=document.getElementById('jg').value.trim();if(!text&&!grat){st('📔 Tulis sesuatu dulu ya!');return;}const today=new Date().toLocaleDateString('id-ID',{weekday:'long',month:'long',day:'numeric',year:'numeric'});S.journals.push({date:today,mood:S.jmood||'😊',text,grat});axp(15,'📔 Refleksi tersimpan! 🌸');snd('save');document.getElementById('jt').value='';document.getElementById('jg').value='';document.getElementById('jtm').value='';const m=document.getElementById('jsvd');m.style.display='block';setTimeout(()=>m.style.display='none',3000);ss();rj();}
+// ── CYCLE ──
+let cdn_day=null,cdn_color=null;
+function rc(){const today=new Date();let ls=null;if(S.periods.length){const sr=[...S.periods].sort((a,b)=>new Date(b.start)-new Date(a.start));ls=new Date(sr[0].start);}if(ls){const diff=Math.floor((today-ls)/(86400000));document.getElementById('cyd').textContent=diff;const nx=new Date(ls);nx.setDate(nx.getDate()+28);document.getElementById('cyn2').textContent=nx.toLocaleDateString('id-ID',{month:'long',day:'numeric'});}else{document.getElementById('cyd').textContent='~';document.getElementById('cyn2').textContent='Belum ada data';}
+  const cal=document.getElementById('cycal');cal.innerHTML='';['Sen','Sel','Rab','Kam','Jum','Sab','Min'].forEach(h=>{const d=document.createElement('div');d.className='ch';d.textContent=h;cal.appendChild(d);});
+  const pdays={};S.periods.forEach(r=>{const s=new Date(r.start);const e=new Date(r.end||r.start);let c=new Date(s);while(c<=e){if(c.getMonth()===2&&c.getFullYear()===2026)pdays[c.getDate()]='red';c.setDate(c.getDate()+1);}});
+  Object.keys(S.cdd).forEach(d=>{const dd=S.cdd[d];if(dd.color&&dd.color!=='none')pdays[parseInt(d)]=dd.color;else if(dd.color==='none')delete pdays[parseInt(d)];});
+  const pred=[];if(ls){const ps=new Date(ls);ps.setDate(ps.getDate()+28);for(let i=0;i<5;i++){const pd=new Date(ps);pd.setDate(pd.getDate()+i);if(pd.getMonth()===2)pred.push(pd.getDate());}}
+  for(let i=0;i<6;i++){const e=document.createElement('div');e.className='cd empty';cal.appendChild(e);}
+  for(let d=1;d<=31;d++){const el=document.createElement('div');const color=pdays[d];const isP=pred.includes(d)&&!color;const isT=d===14;let cls='cd';if(isT)cls+=' today';else if(color==='red')cls+=' p-red';else if(color==='pink')cls+=' p-pink';else if(color==='brown')cls+=' p-brown';else if(isP)cls+=' pred';el.className=cls;el.textContent=d;if(S.cdd[d]&&S.cdd[d].note){const dot=document.createElement('div');dot.className='dndot';el.appendChild(dot);}el.addEventListener('click',()=>odayp(d,el));cal.appendChild(el);}
+  const ph=document.getElementById('phist');ph.innerHTML='';[...S.periods].reverse().forEach(r=>{const d=document.createElement('div');d.style.cssText='display:flex;align-items:center;gap:8px;padding:7px 0;border-bottom:1px solid var(--blue-p);';d.innerHTML='<div style="font-size:15px">🩸</div><div style="flex:1;font-size:12px;font-weight:800;color:var(--tx)">'+r.start+' → '+(r.end||r.start)+'</div><button onclick="dp(\''+r.id+'\')" style="background:none;border:none;cursor:pointer;font-size:11px;color:var(--txl)">🗑</button>';ph.appendChild(d);});}
+function odayp(day,el){snd('pop');cdn_day=day;const data=S.cdd[day]||{};document.getElementById('dntitle').textContent='📅 Tanggal '+day+' Maret 2026';document.getElementById('dnnote').value=data.note||'';cdn_color=data.color||null;document.querySelectorAll('.cpb').forEach(b=>b.classList.remove('sel'));if(data.color&&data.color!=='none'){const m={'red':0,'pink':1,'brown':2};const idx=m[data.color];if(idx!==undefined)document.querySelectorAll('.cpb')[idx].classList.add('sel');}const pop=document.getElementById('dnpop');const rect=el.getBoundingClientRect();pop.style.display='block';let top=rect.bottom+6,left=rect.left;if(top+220>window.innerHeight)top=rect.top-220;if(left+280>window.innerWidth)left=window.innerWidth-285;pop.style.top=top+'px';pop.style.left=Math.max(5,left)+'px';}
+function pcc(c,el){snd('click');cdn_color=c;document.querySelectorAll('.cpb').forEach(b=>b.classList.remove('sel'));el.classList.add('sel');}
+function svdn(){if(cdn_day===null)return;if(!S.cdd[cdn_day])S.cdd[cdn_day]={};S.cdd[cdn_day].color=cdn_color||'none';S.cdd[cdn_day].note=document.getElementById('dnnote').value.trim();snd('save');ss();cdnp();rc();}
+function cdnp(){document.getElementById('dnpop').style.display='none';cdn_day=null;}
+function svp(){const s=document.getElementById('ps').value,e=document.getElementById('pe').value;if(!s)return;S.periods.push({id:Date.now().toString(),start:s,end:e||s});snd('save');ss();rc();st('🌸 Periode disimpan!');}
+function dp(id){snd('click');S.periods=S.periods.filter(r=>r.id!==id);ss();rc();}
+// ── WATER ──
+function rw(){uwui();bc('wcht',[6,7,5,8,6,S.water,0],S.wt||8,'#5ba4cf');}
+function uwui(){const target=parseInt(document.getElementById('wt').value)||8;S.wt=target;document.getElementById('wnum').textContent=S.water;document.getElementById('wpb').style.width=Math.min(100,S.water/target*100)+'%';document.getElementById('wlbl').textContent=S.water+' dari '+target+' gelas';const drops=document.getElementById('wdrops');drops.innerHTML='';for(let i=0;i<Math.max(target,S.water);i++){const d=document.createElement('div');d.className='wd'+(i<S.water?' f':'');d.textContent='💧';drops.appendChild(d);}document.getElementById('st2').textContent=S.water+'/'+target;document.getElementById('sb2').style.width=Math.min(100,S.water/target*100)+'%';}
+function aw(){S.water++;snd('drop');if(S.water===S.wt)axp(15,'💧 Target air tercapai! 🎉');else axp(2,'💧');ss();uwui();ud();}
+function rw2(){if(S.water<=0)return;S.water--;snd('click');ss();uwui();ud();}
+
+function rdh(){rdhl('p');rdhl('e');udhb();}
+function rdhl(type){const items=type==='p'?S.mdhikr:S.edhikr;const c=document.getElementById(type==='p'?'dhpl':'dhel');c.innerHTML='';items.forEach(item=>{const d=document.createElement('div');d.className='dk'+(item.d?' done':'');d.innerHTML='<div style="font-size:19px">'+(item.d?'✅':'📿')+'</div><div style="flex:1"><div style="font-size:12px;font-weight:800;color:var(--tx)">'+item.t+'</div>'+(item.a?'<div class="dar">'+item.a+'</div>':'')+'<div style="font-size:10px;color:var(--blue-d);font-weight:700;margin-top:2px">+'+item.xp+' XP</div></div><div class="ack" style="'+(item.d?'background:var(--gr);border-color:var(--gr)':'')+'">'+(item.d?'✓':'')+'</div>';d.addEventListener('click',()=>tdh(type,item.id));c.appendChild(d);});}
+function tdh(type,id){const items=type==='p'?S.mdhikr:S.edhikr;const item=items.find(i=>i.id===id);if(!item.d){item.d=true;snd('done');axp(item.xp,'📿 Dzikir selesai!');}else{item.d=false;snd('click');}ss();rdhl(type);udhb();}
+function udhb(){const md=S.mdhikr.filter(d=>d.d).length,mt=S.mdhikr.length,ed=S.edhikr.filter(d=>d.d).length,et=S.edhikr.length;document.getElementById('dpb2').style.width=(mt?md/mt*100:0)+'%';document.getElementById('dpl2').textContent=md+'/'+mt;document.getElementById('deb').style.width=(et?ed/et*100:0)+'%';document.getElementById('del').textContent=ed+'/'+et;}
+function sdh(type,el){snd('nav');document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');document.getElementById('dhps').style.display=type==='p'?'block':'none';document.getElementById('dhes').style.display=type==='e'?'block':'none';}
+function oadh(type){snd('pop');document.getElementById('dhtp').value=type;document.getElementById('dht').textContent='➕ Tambah Dzikir '+(type==='p'?'Pagi 🌅':'Petang 🌙');document.getElementById('dhm').classList.add('show');}
+function svdh(){const n=document.getElementById('dhn').value.trim();if(!n)return;const type=document.getElementById('dhtp').value;const item={id:'c'+Date.now(),t:n,a:document.getElementById('dha').value.trim(),xp:parseInt(document.getElementById('dhx').value),d:false};if(type==='p')S.mdhikr.push(item);else S.edhikr.push(item);co('dhm');snd('save');document.getElementById('dhn').value='';document.getElementById('dha').value='';ss();rdhl(type);udhb();st('📿 Dzikir ditambahkan!');}
+// ── STATS ──
+function rst(){document.getElementById('sxp').textContent=S.txp;document.getElementById('sstk').textContent=S.streak;document.getElementById('sdn').textContent=S.acts.filter(a=>a.d).length;const pd=S.prayers.filter(p=>p.s>0).length;document.getElementById('spr').textContent=Math.round(pd/5*100)+'%';document.getElementById('tjuz').value=S.tadjuz;utad();document.getElementById('scht').textContent='Rp '+S.charity.reduce((s,c)=>s+c.a,0).toLocaleString('id-ID');document.getElementById('jcnt').textContent=S.journals.length+' / 30';document.getElementById('shcnt').textContent=pd*2+' / 150';rtd('cdots',S.charity.map(c=>parseInt(c.dt.split('-')[2])).filter(Boolean),14);rtd('jdots',S.journals.map((_,i)=>i+1),14);rtd('sdots',pd>0?Array.from({length:14},(_,i)=>i+1):[],14);bc('stcht',[7,8,6,9,8,S.acts.filter(a=>a.d).length,0],10,'#5ba4cf');}
+function utad(){const juz=parseInt(document.getElementById('tjuz').value)||0;S.tadjuz=juz;ss();document.getElementById('tcnt').textContent=juz+' / 30 Juz';document.getElementById('tbar').style.width=juz/30*100+'%';rtd('tdots',Array.from({length:juz},(_,i)=>i+1),null);document.getElementById('st3').textContent='Juz '+juz;document.getElementById('sb3').style.width=juz/30*100+'%';document.getElementById('htad').textContent=juz+'/30';snd('click');}
+function rtd(id,done,today){const c=document.getElementById(id);if(!c)return;c.innerHTML='';for(let d=1;d<=30;d++){const dot=document.createElement('div');dot.className='td';const isT=d===today,isD=done.includes(d);if(isT)dot.className+=' tdt';else if(isD)dot.className+=' tdd';else dot.className+=' tdm';dot.textContent=d;c.appendChild(dot);}}
+// ── NAME ──
+function onm(){snd('pop');document.getElementById('nmi').value=S.name;document.querySelectorAll('#avr .ep').forEach(e=>e.classList.toggle('sel',e.textContent===S.sav));document.getElementById('nmm').classList.add('show');}
+function pav(el){snd('click');document.querySelectorAll('#avr .ep').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');S.sav=el.textContent;}
+function svn(){const n=document.getElementById('nmi').value.trim();if(!n)return;S.name=n;S.avatar=S.sav;co('nmm');snd('save');ss();ud();rd();st('✨ Nama diperbarui!');}
+// ── HELPERS ──
+function rcal(id,hd,today,pred){const cal=document.getElementById(id);if(!cal)return;cal.innerHTML='';['Sen','Sel','Rab','Kam','Jum','Sab','Min'].forEach(h=>{const d=document.createElement('div');d.className='ch';d.textContent=h;cal.appendChild(d);});for(let i=0;i<6;i++){const e=document.createElement('div');e.className='cd empty';cal.appendChild(e);}for(let d=1;d<=31;d++){const el=document.createElement('div');const isH=hd.includes(d),isP=pred.includes(d),isT=d===today;el.className='cd'+(isT?' today':isH?' hev':isP?' pred':'');el.textContent=d;cal.appendChild(el);}}
+function bc(id,data,max,color){const c=document.getElementById(id);if(!c)return;c.innerHTML='';data.forEach((v,i)=>{const pct=Math.max(2,(v/max)*100);const bar=document.createElement('div');bar.className='cbar';bar.style.cssText='height:'+pct+'%;background:'+(i===5?color:color+'66')+';transition:height .8s ease '+(i*.07)+'s;';c.appendChild(bar);});}
+document.addEventListener('click',e=>{if(e.target.classList.contains('ov'))e.target.classList.remove('show');const pop=document.getElementById('dnpop');if(pop.style.display==='block'&&!pop.contains(e.target)&&!e.target.classList.contains('cd'))cdnp();});
+// ── INIT ──
+document.addEventListener('DOMContentLoaded',()=>{ls();const today=new Date().toISOString().split('T')[0];document.getElementById('ps').value=today;document.getElementById('pe').value=today;if(S.wt)document.getElementById('wt').value=S.wt;rd();if(S.name==='Nama Kamu')setTimeout(()=>{onm();st('👋 Halo! Masukkan namamu dulu ya 🌸');},800);});
+// Fix water remove button
+document.addEventListener('DOMContentLoaded',()=>{const btn=document.querySelector('[onclick="rw2()"]');if(btn)btn.setAttribute('onclick','rw2()');});
+
+// ── CUSTOM SHOLAT ──
+let _cse = '🌙';
+function pickCSE(el){document.querySelectorAll('#csm .ep').forEach(e=>e.classList.remove('sel'));el.classList.add('sel');_cse=el.textContent;snd('click');}
+function openCS(){document.getElementById('csm').classList.add('show');}
+function saveCS(){
+  const n=document.getElementById('csn').value.trim();
+  if(!n){snd('click');return;}
+  const p={id:'cs'+Date.now(),n,e:_cse,t:document.getElementById('cst').value||'—',s:0,custom:true,xp:parseInt(document.getElementById('csxp').value)};
+  if(!S.customSholat)S.customSholat=[];
+  S.customSholat.push(p);
+  S.prayers.push(p);
+  document.getElementById('csm').classList.remove('show');
+  document.getElementById('csn').value='';
+  document.getElementById('cst').value='';
+  snd('save');ss();rsh();st('🕌 Sholat custom ditambahkan!');
+}
+function delCS(id,ev){
+  ev.stopPropagation();snd('click');
+  S.prayers=S.prayers.filter(p=>p.id!==id);
+  S.customSholat=(S.customSholat||[]).filter(p=>p.id!==id);
+  ss();rsh();
+}
+</script>
+
+<!-- Custom Sholat Modal -->
+<div class="ov" id="csm" onclick="if(event.target===this)this.classList.remove('show')">
+  <div class="modal">
+    <div class="mt">🕌 Tambah Sholat Custom</div>
+    <div class="fg"><label class="fl">Nama Sholat</label><input class="fi" id="csn" placeholder="cth. Tahajud, Dhuha..."></div>
+    <div class="fg"><label class="fl">Emoji</label>
+      <div class="er">
+        <div class="ep sel" onclick="pickCSE(this)">🌙</div><div class="ep" onclick="pickCSE(this)">🌅</div>
+        <div class="ep" onclick="pickCSE(this)">✨</div><div class="ep" onclick="pickCSE(this)">🕌</div>
+        <div class="ep" onclick="pickCSE(this)">🤲</div><div class="ep" onclick="pickCSE(this)">💫</div>
+        <div class="ep" onclick="pickCSE(this)">🌟</div><div class="ep" onclick="pickCSE(this)">🌸</div>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">Waktu</label><input class="fi" id="cst" placeholder="cth. 08:00" type="time"></div>
+    <div class="fg"><label class="fl">XP</label>
+      <select class="fi" id="csxp">
+        <option value="5">5 XP</option><option value="8">8 XP</option>
+        <option value="10" selected>10 XP</option><option value="15">15 XP</option>
+      </select>
+    </div>
+    <div class="mf">
+      <button class="btn bo" onclick="document.getElementById('csm').classList.remove('show')">Batal</button>
+      <button class="btn bp" onclick="saveCS()">💾 Simpan</button>
+    </div>
+  </div>
+</div>
+
+
+<div id="installBanner" style="display:none;position:fixed;bottom:85px;left:12px;right:12px;z-index:9000;background:linear-gradient(135deg,#5ba4cf,#8878d0);color:white;border-radius:14px;padding:12px 14px;box-shadow:0 8px 24px rgba(91,164,207,.4);font-family:'Nunito',sans-serif;">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+    <div style="font-weight:800;font-size:13px">📲 Pasang di Home Screen</div>
+    <div onclick="document.getElementById('installBanner').style.display='none'" style="cursor:pointer;opacity:.8;font-size:16px">✕</div>
+  </div>
+  <div style="font-size:11px;opacity:.9;font-weight:600;line-height:1.5">
+    Chrome: Tap ⋮ → <b>Tambahkan ke layar utama</b><br>
+    Samsung: Tap ⋮ → <b>Add page to</b> → Home screen<br>
+    Data kamu tersimpan otomatis di HP ini ✅
+  </div>
+</div>
+<script>
+// Show install banner after 3 seconds if not already installed
+setTimeout(()=>{
+  if(window.navigator.standalone !== true && 
+     !window.matchMedia('(display-mode: standalone)').matches){
+    const b = document.getElementById('installBanner');
+    if(b) b.style.display='block';
+  }
+}, 3000);
+</script>
+
+</body>
+</html>
